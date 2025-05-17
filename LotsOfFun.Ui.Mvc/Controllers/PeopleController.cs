@@ -1,4 +1,6 @@
-﻿using LotsOfFun.Model;
+﻿using AutoMapper;
+using LotsOfFun.Dto;
+using LotsOfFun.Model;
 using LotsOfFun.Services;
 using LotsOfFun.Ui.Mvc.Models;
 using LotsOfFun.Ui.Mvc.Models.People;
@@ -9,10 +11,12 @@ namespace LotsOfFun.Ui.Mvc.Controllers
     public class PeopleController : Controller
     {
         private readonly PersonService _personService;
+        private readonly IMapper _mapper;
 
-        public PeopleController(PersonService personService)
+        public PeopleController(PersonService personService,IMapper mapper)
         {
             _personService = personService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -37,9 +41,16 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details([FromRoute] int id)
         {
-            return View();
+            var personDto = await _personService.GetDetails(id);
+            if (personDto == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _mapper.Map<PersonDetailViewModel>(personDto);
+            return View(viewModel);
         }
 
 
@@ -52,7 +63,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreatePersonViewModel viewModel)
+        public async Task<IActionResult> Create(CreateEditPersonViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -84,31 +95,35 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
         [HttpGet]
-        [Route("{controller}/Edit/{id:int}")]
         public async Task<IActionResult> Edit([FromRoute]int id)
         {
             var person = await _personService.Get(id);
-            var viewModel = new CreatePersonViewModel()
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new CreateEditPersonViewModel
             {
                 FirstName = person.FirstName,
                 LastName = person.LastName,
-                City = person.Address.City,
+                Email = person.Email,
+                Phone = person.Phone,
+                NewsLetter = person.NewsLetter,
                 Street = person.Address.Street,
                 Number = person.Address.Number,
                 Unit = person.Address.UnitNumber,
                 PostalCode = person.Address.PostalCode,
-                Email = person.Email,
-                NewsLetter = person.NewsLetter,
-                Phone = person.Phone
-
+                City = person.Address.City
             };
+
             return View(viewModel);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute] int id,[FromForm] CreatePersonViewModel viewModel)
+        public async Task<IActionResult> Edit([FromRoute] int id,[FromForm] CreateEditPersonViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -121,27 +136,17 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 return NotFound();
             }
 
-            // Map updated fields from ViewModel to entity(or dto?)
-            person.FirstName = viewModel.FirstName;
-            person.LastName = viewModel.LastName;
-            person.Email = viewModel.Email;
-            person.Phone = viewModel.Phone;
-            person.NewsLetter = viewModel.NewsLetter;
-            person.Address.Street = viewModel.Street;
-            person.Address.Number = viewModel.Number;
-            person.Address.UnitNumber = viewModel.Unit;
-            person.Address.PostalCode = viewModel.PostalCode;
-            person.Address.City = viewModel.City;
+            var dto = _mapper.Map<UpdatePersonDto>(viewModel);
+            var updatedPerson = await _personService.Update(id, dto);
 
-            var updatedPerson = await _personService.Update(id, person);
             if (updatedPerson == null)
             {
-                return NotFound(); // Or handle update failure differently
+                return NotFound();
             }
 
             return RedirectToAction("Index");
 
-            
+
         }
     }
 }

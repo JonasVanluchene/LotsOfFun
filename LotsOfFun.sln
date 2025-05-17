@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotsOfFun.Services", "LotsO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotsOfFun.Repository", "LotsOfFun.Repository\LotsOfFun.Repository.csproj", "{00CD6571-B2C3-4E5A-9482-CBA55F2B0514}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LotsOfFun.Dto", "LotsOfFun.Dto\LotsOfFun.Dto.csproj", "{F109019C-8EAE-4C7A-882D-9EE27E8BCFB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{00CD6571-B2C3-4E5A-9482-CBA55F2B0514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00CD6571-B2C3-4E5A-9482-CBA55F2B0514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00CD6571-B2C3-4E5A-9482-CBA55F2B0514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F109019C-8EAE-4C7A-882D-9EE27E8BCFB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F109019C-8EAE-4C7A-882D-9EE27E8BCFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F109019C-8EAE-4C7A-882D-9EE27E8BCFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F109019C-8EAE-4C7A-882D-9EE27E8BCFB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

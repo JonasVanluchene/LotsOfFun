@@ -1,0 +1,15 @@
+﻿@model LotsOfFun.Ui.Mvc.Models.People.PersonDetailViewModel
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
+        <p class="card-text">@Model.Email</p>
+        <p class="card-text">@Model.Phone</p>
+        <p class="card-text">@Model.FullAddress</p>
+        <p class="card-text">@Model.NewsLetter</p>
+        <p class="card-text">@Model.Volunteer</p>
+
+
+        <a asp-action="Index" class="btn btn-primary">Terug</a>
+    </div>
+</div>

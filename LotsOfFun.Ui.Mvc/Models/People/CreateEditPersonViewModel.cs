@@ -2,7 +2,7 @@
 
 namespace LotsOfFun.Ui.Mvc.Models.People
 {
-    public class CreatePersonViewModel
+    public class CreateEditPersonViewModel
     {
         [Display(Name = "Voornaam")]
         [Required(ErrorMessage = "Voornaam is verplicht")]

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using LotsOfFun.Dto;
 using LotsOfFun.Model;
 using LotsOfFun.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,12 @@ namespace LotsOfFun.Services
     {
 
         private readonly LotsOfFunDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public PersonService(LotsOfFunDbContext dbContext)
+        public PersonService(LotsOfFunDbContext dbContext,IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
 
@@ -35,6 +39,17 @@ namespace LotsOfFun.Services
             return person;
         }
 
+        public async Task<PersonDetailDto?> GetDetails(int id)
+        {
+            var person = await _dbContext.People
+                .Include(p => p.Address)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (person == null)
+                return null;
+
+            return _mapper.Map<PersonDetailDto>(person);
+        }
 
         public async Task<Person?> Create(Person person)
         {
@@ -43,32 +58,18 @@ namespace LotsOfFun.Services
              return person;
         }
 
-        public async Task<Person?> Update(int id, Person person)
+        public async Task<Person?> Update(int id, UpdatePersonDto personDto)
         {
-            var dbPerson = await Get(id);
-            if (dbPerson is null)
-            {
-                return null;
-            }
-            dbPerson.FirstName = person.FirstName;
-            dbPerson.LastName = person.LastName;
-            dbPerson.Email =  person.Email;
-            dbPerson.Phone = person.Phone;
+            var person = await Get(id);
+            if (person == null) return null;
 
-            dbPerson.Address.Street = person.Address.Street;
-            dbPerson.Address.Number = person.Address.Number;
-            dbPerson.Address.UnitNumber = person.Address.UnitNumber;
-            dbPerson.Address.PostalCode = person.Address.PostalCode;
-            dbPerson.Address.City = person.Address.City;
-            dbPerson.Address.Street = person.Address.Street;
-            dbPerson.Address.Number = person.Address.Number;
-            dbPerson.Address.UnitNumber = person.Address.UnitNumber;
-            dbPerson.Address.PostalCode = person.Address.PostalCode;
-            dbPerson.Address.City = person.Address.City;
-            dbPerson.NewsLetter = person.NewsLetter;
+            _mapper.Map(personDto, person); // maps basic fields
+
+            // Address requires separate mapping because it's nested
+            _mapper.Map(personDto, person.Address);
 
             await _dbContext.SaveChangesAsync();
-            return dbPerson;
+            return person;
 
         }
     }

@@ -15,7 +15,11 @@ builder.Services.AddDbContext<LotsOfFunDbContext>(options =>
 });
 
 builder.Services.AddScoped<PersonService>();
-
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<LotsOfFun.Ui.Mvc.Mapping.MvcMappingProfile>();
+    cfg.AddProfile<LotsOfFun.Services.Mapping.MappingProfile>();
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

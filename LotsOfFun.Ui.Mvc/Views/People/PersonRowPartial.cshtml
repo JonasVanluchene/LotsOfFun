@@ -1,7 +1,7 @@
 ﻿@model LotsOfFun.Ui.Mvc.Models.People.PersonViewModel
 
 <tr>
-    <td>@Model.Name</td>
+    <td><a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-success">@Model.Name</a></td>
     <td>@Model.Email</td>
     <td><div class="d-flex justify-content-between">
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
