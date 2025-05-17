@@ -1,20 +1,48 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model LotsOfFun.Ui.Mvc.Models.People.PeopleViewModel
 
-<a asp-action="Create" class="btn btn-primary">Add new Person</a>
-<table class="table table-stripped table-bordered">
-    <thead>
-    <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.People)
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Personen</h2>
+        <div class="btn-group">
+            <a asp-action="ExportNewsletterEmails" class="btn btn-outline-info">
+                <i class="bi bi-envelope"></i> Nieuwsbrief Abonnees
+            </a>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nieuwe Persoon
+            </a>
+        </div>
+    </div>
+
+    @if (Model.People?.Any() == true)
     {
-        <partial name="PersonRowPartial" model="item"/>
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th scope="col">Naam</th>
+                        <th scope="col">Email</th>
+                        <th scope="col" class="text-center">Acties</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.People)
+                    {
+                        <partial name="PersonRowPartial" model="item"/>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-light">
+                <small class="text-muted">Totaal: @Model.TotalCount personen</small>
+            </div>
+        </div>
     }
-    </tbody>
-</table>
-<p>Total: @Model.TotalCount</p>
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Er zijn nog geen personen toegevoegd.
+        </div>
+    }
+</div>

@@ -1,15 +1,120 @@
 ﻿@model LotsOfFun.Ui.Mvc.Models.People.PersonDetailViewModel
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
-        <p class="card-text">@Model.Email</p>
-        <p class="card-text">@Model.Phone</p>
-        <p class="card-text">@Model.FullAddress</p>
-        <p class="card-text">@Model.NewsLetter</p>
-        <p class="card-text">@Model.Volunteer</p>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@Model.FullName</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-person-circle me-2"></i>Persoonlijke Informatie
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-bold">Naam:</span>
+                                    <span>@Model.FullName</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-bold">Email:</span>
+                                    <span>@(string.IsNullOrEmpty(Model.Email) ? "-" : Model.Email)</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="fw-bold">Telefoon:</span>
+                                    <span>@(string.IsNullOrEmpty(Model.Phone) ? "-" : Model.Phone)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-light">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-geo-alt me-2"></i>Adres
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text fs-5">
+                                @if (string.IsNullOrEmpty(Model.FullAddress))
+                                {
+                                    <span class="text-muted">Geen adres opgegeven</span>
+                                }
+                                else
+                                {
+                                    @Model.FullAddress
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <a asp-action="Index" class="btn btn-primary">Terug</a>
+            <div class="card mt-3">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-gear me-2"></i>Voorkeuren
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="me-3">
+                                    @if (Model.NewsLetter)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-lg"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary"><i class="bi bi-x-lg"></i></span>
+                                    }
+                                </div>
+                                <div>
+                                    <strong>Nieuwsbrief:</strong>
+                                    <span class="ms-2">@(Model.NewsLetter ? "Ingeschreven" : "Niet ingeschreven")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="me-3">
+                                    @if (Model.IsVolunteer)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-lg"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary"><i class="bi bi-x-lg"></i></span>
+                                    }
+                                </div>
+                                <div>
+                                    <strong>Vrijwilliger:</strong>
+                                    <span class="ms-2">@(Model.IsVolunteer ? "Ja" : "Nee")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Terug naar lijst
+                </a>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.FullName" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Bewerken
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

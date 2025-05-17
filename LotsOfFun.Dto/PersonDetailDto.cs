@@ -14,7 +14,7 @@ namespace LotsOfFun.Dto
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public bool NewsLetter { get; set; }
-
+        public bool IsVolunteer { get; set; }
         public string FullAddress { get; set; } = string.Empty;
     }
 }

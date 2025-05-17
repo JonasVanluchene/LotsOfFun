@@ -5,6 +5,7 @@ using LotsOfFun.Services;
 using LotsOfFun.Ui.Mvc.Models;
 using LotsOfFun.Ui.Mvc.Models.People;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
@@ -147,6 +148,26 @@ namespace LotsOfFun.Ui.Mvc.Controllers
             return RedirectToAction("Index");
 
 
+        }
+
+
+        [HttpGet]
+        public IActionResult ExportNewsletterEmails()
+        {
+            var emails = _personService.GetNewsletterSubscriberEmails();
+
+            if (!emails.Any())
+            {
+                TempData["Message"] = "Er zijn geen nieuwsbrief abonnees gevonden.";
+                return RedirectToAction("Index");
+            }
+
+            // Create comma-separated list of emails
+            var emailContent = string.Join(", ", emails);
+
+            // Return as downloadable text file
+            byte[] bytes = Encoding.UTF8.GetBytes(emailContent);
+            return File(bytes, "text/plain", "newsletter_subscribers.txt");
         }
     }
 }

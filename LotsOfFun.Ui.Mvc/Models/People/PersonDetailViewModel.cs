@@ -11,6 +11,6 @@
 
         public string FullAddress { get; set; } = string.Empty;
 
-        public string  Volunteer { get; set; }
+        public bool  IsVolunteer { get; set; }
     }
 }

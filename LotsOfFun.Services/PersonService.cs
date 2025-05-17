@@ -72,5 +72,21 @@ namespace LotsOfFun.Services
             return person;
 
         }
+
+        public async Task Delete(int id)
+        {
+            var person = await Get(id);
+             _dbContext.People.Remove(person);
+             await _dbContext.SaveChangesAsync();
+        }
+
+        public IEnumerable<string> GetNewsletterSubscriberEmails()
+        {
+            return _dbContext.People
+                .Where(p => p.NewsLetter)
+                .Select(p => p.Email)
+                .Where(email => !string.IsNullOrEmpty(email))
+                .ToList();
+        }
     }
 }
