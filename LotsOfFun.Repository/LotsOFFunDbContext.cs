@@ -33,8 +33,23 @@ namespace LotsOfFun.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Person>().OwnsOne(p => p.Address);
-            modelBuilder.Entity<Activity>().OwnsOne(a => a.Address);
+            modelBuilder.Entity<Person>().OwnsOne(p => p.Address, a =>
+            {
+                a.Property(p => p.Street).HasColumnName("Street");
+                a.Property(p => p.Number).HasColumnName("Number");
+                a.Property(p => p.UnitNumber).HasColumnName("UnitNumber");
+                a.Property(p => p.PostalCode).HasColumnName("PostalCode");
+                a.Property(p => p.City).HasColumnName("City");
+            });
+
+            modelBuilder.Entity<Activity>().OwnsOne(a => a.Address, a =>
+            {
+                a.Property(p => p.Street).HasColumnName("Street");
+                a.Property(p => p.Number).HasColumnName("Number");
+                a.Property(p => p.UnitNumber).HasColumnName("UnitNumber");
+                a.Property(p => p.PostalCode).HasColumnName("PostalCode");
+                a.Property(p => p.City).HasColumnName("City");
+            });
 
             modelBuilder.Entity<Activity>()
                 .Property(a => a.Price)

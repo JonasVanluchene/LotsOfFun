@@ -1,0 +1,17 @@
+﻿@model PeopleViewModel
+
+<table class="table table-stripped table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.People)
+    {
+        <partial name="PersonRowPartial" model="item"/>
+    }
+    </tbody>
+</table>

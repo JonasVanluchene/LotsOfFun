@@ -1,5 +1,6 @@
 
 using LotsOfFun.Repository;
+using LotsOfFun.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<LotsOfFunDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+builder.Services.AddScoped<PersonService>();
 
 var app = builder.Build();
 
