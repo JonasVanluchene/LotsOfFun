@@ -1,5 +1,7 @@
-﻿@model PeopleViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LotsOfFun.Ui.Mvc.Models.People.PeopleViewModel
 
+<a asp-action="Create" class="btn btn-primary">Add new Person</a>
 <table class="table table-stripped table-bordered">
     <thead>
     <tr>

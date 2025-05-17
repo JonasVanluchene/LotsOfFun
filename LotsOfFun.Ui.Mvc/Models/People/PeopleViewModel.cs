@@ -1,4 +1,4 @@
-﻿namespace LotsOfFun.Ui.Mvc.Models
+﻿namespace LotsOfFun.Ui.Mvc.Models.People
 {
     public class PeopleViewModel
     {
