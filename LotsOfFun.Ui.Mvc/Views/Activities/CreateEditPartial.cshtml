@@ -1,0 +1,100 @@
+﻿@model LotsOfFun.Ui.Mvc.Models.Activity.CreateEditActivityViewModel 
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<fieldset class="border p-3 mb-3">
+    <legend class="w-auto px-2">Activiteit Info</legend>
+    <div class="mb-3">
+        
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" /> 
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+   
+</fieldset>
+<fieldset class="border p-3 mb-3">
+    <legend class="w-auto px-2">Address</legend>
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label"></label>
+        <input asp-for="Location" class="form-control">
+        <span asp-validation-for="Location" class="text-danger"></span>
+
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Street" class="form-label"></label>
+            <input asp-for="Street" class="form-control" />
+            <span asp-validation-for="Street" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Number" class="form-label"></label>
+            <input asp-for="Number" class="form-control" />
+            <span asp-validation-for="Number" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Unit" class="form-label"></label>
+            <input asp-for="Unit" class="form-control" />
+            <span asp-validation-for="Unit" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label asp-for="PostalCode" class="form-label"></label>
+            <input asp-for="PostalCode" class="form-control" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+        <div class="col-md-8">
+            <label asp-for="City" class="form-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+    </div>
+</fieldset>
+<fieldset>
+    <legend class="w-auto px-2">Tijdstip</legend>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="StartDate" class="form-label"></label>
+            <input asp-for="StartDate" class="form-control" />
+            <span asp-validation-for="StartDate" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="EndDate" class="form-label"></label>
+            <input asp-for="EndDate" class="form-control" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>
+    </div>
+        
+   
+</fieldset>
+
+<fieldset>
+    <legend class="w-auto px-2">Aantal deelnemers</legend>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="MinimumParticipants" class="form-label"></label>
+            <input asp-for="MinimumParticipants" class="form-control" />
+            <span asp-validation-for="MinimumParticipants" class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="MaximumParticipants" class="form-label"></label>
+            <input asp-for="MaximumParticipants" class="form-control" />
+            <span asp-validation-for="MaximumParticipants" class="text-danger"></span>
+        </div>
+    </div>
+        
+   
+</fieldset>
+

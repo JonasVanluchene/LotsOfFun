@@ -1,20 +1,16 @@
-﻿@* @using Microsoft.AspNetCore.Mvc.TagHelpers *@
-@model LotsOfFun.Ui.Mvc.Models.People.PeopleViewModel
+﻿@model LotsOfFun.Ui.Mvc.Models.Activity.ActivitiesViewModel
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Personen</h2>
-        <div class="btn-group">
-            <a asp-action="ExportNewsletterEmails" class="btn btn-outline-info">
-                <i class="bi bi-envelope"></i> Nieuwsbrief Abonnees
-            </a>
+        <h2>Activiteiten</h2>
+        
             <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Nieuwe Persoon
+                <i class="bi bi-plus-circle"></i> Nieuwe Activiteit
             </a>
-        </div>
+        
     </div>
 
-    @if (Model.People?.Any() == true)
+    @if (Model.Activities?.Any() == true)
     {
         <div class="card shadow-sm">
             <div class="table-responsive">
@@ -22,27 +18,24 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Naam</th>
-                            <th scope="col">Email</th>
+                            <th scope="col">Locatie</th>
                             <th scope="col" class="text-center">Acties</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.People)
+                        @foreach (var item in Model.Activities)
                         {
-                            <partial name="PersonRowPartial" model="item" />
+                            <partial name="ActivityRowPartial" model="item" />
                         }
                     </tbody>
                 </table>
-            </div>
-            <div class="card-footer bg-light">
-                <small class="text-muted">Totaal: @Model.TotalCount personen</small>
             </div>
         </div>
     }
     else
     {
         <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i> Er zijn nog geen personen toegevoegd.
+            <i class="bi bi-info-circle"></i> Er zijn nog geen activiteiten toegevoegd.
         </div>
     }
 </div>
@@ -80,8 +73,8 @@
 
                 let id = $(this).data("id");
 
-                let input = $("#deleteModal input[name='Id']")                
-               
+                let input = $("#deleteModal input[name='Id']")
+
                 $(input).val(id);
                 let name = $(this).data("name");
                 $(".modal-body strong[id='PersonToDelete']").html(name);

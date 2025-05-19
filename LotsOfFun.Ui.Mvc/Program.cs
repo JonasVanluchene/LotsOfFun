@@ -1,6 +1,7 @@
 
 using LotsOfFun.Repository;
 using LotsOfFun.Services;
+using LotsOfFun.Services.Helper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ builder.Services.AddDbContext<LotsOfFunDbContext>(options =>
 });
 
 builder.Services.AddScoped<PersonService>();
+builder.Services.AddScoped<ActivityService>();
+
+
+
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<LotsOfFun.Ui.Mvc.Mapping.MvcMappingProfile>();
