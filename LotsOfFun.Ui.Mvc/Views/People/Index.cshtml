@@ -20,17 +20,17 @@
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
-                    <tr>
-                        <th scope="col">Naam</th>
-                        <th scope="col">Email</th>
-                        <th scope="col" class="text-center">Acties</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">Naam</th>
+                            <th scope="col">Email</th>
+                            <th scope="col" class="text-center">Acties</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model.People)
-                    {
-                        <partial name="PersonRowPartial" model="item"/>
-                    }
+                        @foreach (var item in Model.People)
+                        {
+                            <partial name="PersonRowPartial" model="item" />
+                        }
                     </tbody>
                 </table>
             </div>
@@ -46,3 +46,47 @@
         </div>
     }
 </div>
+
+@section Modals {
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bevestig verwijderen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Weet u zeker dat u <strong id="PersonToDelete"></strong> wilt verwijderen?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="Id" />
+                        <button type="submit" class="btn btn-danger">Verwijderen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts
+{
+    <script>
+        $(function(){
+            $("[data-type='deleteButton']").on("click", function(){
+
+                let id = $(this).data("id");
+
+                let input = $("#deleteModal input[name='Id']")                
+               
+                $(input).val(id);
+                let name = $(this).data("name");
+                $(".modal-body strong[id='PersonToDelete']").html(name);
+
+            });
+        });
+    </script>
+}

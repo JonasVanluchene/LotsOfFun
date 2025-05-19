@@ -38,9 +38,9 @@ namespace LotsOfFun.Services
             }).ToList();
         }
 
-        public async Task<Person?> Get(int id)
+        public async Task<Person> Get(int id)
         {
-            var person = await _dbContext.People.FirstOrDefaultAsync(p => p.Id == id);
+            var person = await _dbContext.People.Include(p => p.Address).FirstOrDefaultAsync(p => p.Id == id);
             if (person == null)
             {
                 throw new KeyNotFoundException($"Person with ID {id} not found.");
@@ -69,13 +69,27 @@ namespace LotsOfFun.Services
 
         public async Task<Person?> Update(int id, UpdatePersonDto personDto)
         {
-            var person = await Get(id);
-            if (person == null) return null;
 
+            var person = await Get(id);
             _mapper.Map(personDto, person); // maps basic fields
 
             // Address requires separate mapping because it's nested
-            _mapper.Map(personDto, person.Address);
+            if (person.Address == null)
+            {
+                person.Address = new Address
+                {
+                    Street = personDto.Street,
+                    Number = personDto.Number,
+                    PostalCode = personDto.PostalCode,
+                    City = personDto.City,
+                    UnitNumber = personDto.UnitNumber
+                };
+            }
+            else
+            {
+                _mapper.Map(personDto, person.Address);
+            }
+
 
             await _dbContext.SaveChangesAsync();
             return person;

@@ -14,7 +14,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
         private readonly PersonService _personService;
         private readonly IMapper _mapper;
 
-        public PeopleController(PersonService personService,IMapper mapper)
+        public PeopleController(PersonService personService, IMapper mapper)
         {
             _personService = personService;
             _mapper = mapper;
@@ -68,7 +68,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -90,17 +90,23 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 Email = viewModel.Email,
                 Phone = viewModel.Phone,
                 NewsLetter = viewModel.NewsLetter,
-                Address = new Address
+                IsActive = true
+            };
+
+            if (!string.IsNullOrWhiteSpace(viewModel.Street) &&
+                !string.IsNullOrWhiteSpace(viewModel.Number) &&
+                !string.IsNullOrWhiteSpace(viewModel.PostalCode) &&
+                !string.IsNullOrWhiteSpace(viewModel.City))
+            {
+                person.Address = new Address
                 {
                     Street = viewModel.Street,
                     Number = viewModel.Number,
                     UnitNumber = viewModel.Unit,
                     PostalCode = viewModel.PostalCode,
                     City = viewModel.City
-                }
-
-            };
-
+                };
+            }
             await _personService.Create(person);
 
             return RedirectToAction("Index");
@@ -108,46 +114,53 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute]int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
-            var person = await _personService.Get(id);
-            if (person == null)
+
+            try
             {
+                var person = await _personService.Get(id);
+
+                var viewModel = new CreateEditPersonViewModel
+                {
+                    FirstName = person.FirstName,
+                    LastName = person.LastName,
+                    Email = person.Email,
+                    Phone = person.Phone,
+                    NewsLetter = person.NewsLetter,
+                    Street = person.Address?.Street,
+                    Number = person.Address?.Number,
+                    Unit = person.Address?.UnitNumber,
+                    PostalCode = person.Address?.PostalCode,
+                    City = person.Address?.City
+                };
+
+                return View(viewModel);
+            }
+            catch (KeyNotFoundException e)
+            {
+                Console.WriteLine(e);
                 return NotFound();
             }
-
-            var viewModel = new CreateEditPersonViewModel
+            catch (Exception e)
             {
-                FirstName = person.FirstName,
-                LastName = person.LastName,
-                Email = person.Email,
-                Phone = person.Phone,
-                NewsLetter = person.NewsLetter,
-                Street = person.Address.Street,
-                Number = person.Address.Number,
-                Unit = person.Address.UnitNumber,
-                PostalCode = person.Address.PostalCode,
-                City = person.Address.City
-            };
+                Console.WriteLine(e);
+                return View("Error");
+            }
 
-            return View(viewModel);
+
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute] int id,[FromForm] CreateEditPersonViewModel viewModel)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] CreateEditPersonViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
 
-            var person = await _personService.Get(id);
-            if (person == null)
-            {
-                return NotFound();
-            }
 
             var dto = _mapper.Map<UpdatePersonDto>(viewModel);
             var updatedPerson = await _personService.Update(id, dto);
