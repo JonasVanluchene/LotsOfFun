@@ -21,7 +21,6 @@ namespace LotsOfFun.Ui.Mvc.Models.People
         public string? Street { get; set; }
 
         [Display(Name = "Nummer")]
-
         public string? Number { get; set; }
 
         [Display(Name = "Bus")]

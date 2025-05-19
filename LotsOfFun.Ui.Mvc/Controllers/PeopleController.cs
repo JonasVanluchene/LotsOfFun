@@ -22,22 +22,34 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var people = await _personService.GetAll();
-            var viewModel = new PeopleViewModel()
+            try
             {
-                People = people.Select(p =>
+                var people = await _personService.GetAll();
 
-                    new PersonViewModel
-                    {
-                        Id = p.Id,
-                        Name = $"{p.FirstName} {p.LastName}",
-                        Email = p.Email ?? "No Email"
-                    }
-                ).ToList()
 
-            };
+                var viewModel = new PeopleViewModel()
+                {
+                    //Manual mapping from dto to viewmodel (could implement automapper later)
+                    People = people.Select(p =>
+                        new PersonViewModel
+                        {
+                            Id = p.Id,
+                            Name = p.FullName,
+                            Email = p.Email
+                        }
+                    ).ToList()
+                };
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (use a logging framework in real apps)
+                Console.WriteLine($"Error retrieving people: {ex.Message}");
+
+                // Optionally show an error view or a message
+                return View("Error");
+            }
         }
 
 

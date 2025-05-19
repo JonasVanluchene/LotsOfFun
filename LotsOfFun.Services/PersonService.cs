@@ -24,9 +24,18 @@ namespace LotsOfFun.Services
         }
 
 
-        public async Task<IList<Person>> GetAll()
+        public async Task<IList<PersonDto>> GetAll()
         {
-            return await _dbContext.People.ToListAsync();  
+            var people = await _dbContext.People.ToListAsync();
+
+
+            //Manual mapping from domain model to dto (could use automapper later)
+            return people.Select(p => new PersonDto
+            {
+                Id = p.Id,
+                FullName = $"{p.FirstName} {p.LastName}",
+                Email = p.Email ?? "No Email"
+            }).ToList();
         }
 
         public async Task<Person?> Get(int id)
