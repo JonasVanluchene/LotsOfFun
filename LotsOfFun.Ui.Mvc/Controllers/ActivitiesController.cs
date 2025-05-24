@@ -3,16 +3,21 @@ using LotsOfFun.Services;
 using LotsOfFun.Ui.Mvc.Helper.Validate;
 using LotsOfFun.Ui.Mvc.Models.Activity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
     public class ActivitiesController : Controller
     {
         private readonly ActivityService _activityService;
+        private readonly LocationService _locationService;
 
-        public ActivitiesController(ActivityService activityService)
+
+        public ActivitiesController(ActivityService activityService, LocationService locationService)
         {
             _activityService = activityService;
+            _locationService = locationService;
         }
 
         [HttpGet]
@@ -39,9 +44,45 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var locations = await _locationService.GetAll();
+
+            var locationDataJson = JsonSerializer.Serialize(locations.Select(l => new {
+                id = l.Id,
+                street = l.Address.Street,
+                number = l.Address.Number,
+                unit = l.Address.UnitNumber,
+                postalCode = l.Address.PostalCode,
+                city = l.Address.City
+            }));
+
+            CreateEditActivityViewModel viewModel = new CreateEditActivityViewModel
+            {
+                MaximumParticipants = 25,
+                MinimumParticipants = 1,
+                StartDate = DateOnly.FromDateTime(DateTime.Now),
+                StartTime = new TimeOnly(13, 30),
+                EndTime = new TimeOnly(16, 30),
+                Name = String.Empty,
+                SelectedLocationId = 0,
+                Locations = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "", Text = "-- Select a location --" }
+                    }
+                    .Concat(locations.Select(l => new SelectListItem
+                    {
+                        Value = l.Id.ToString(),
+                        Text = l.Name
+                    }))
+                    .ToList(),
+                LocationDataJson = locationDataJson,
+                Price = 5.0M
+
+            };
+
+            
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -58,7 +99,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 
             }
 
-            if (viewModel.StartDate >= viewModel.EndDate)
+            if (viewModel.StartTime >= viewModel.EndTime)
             {
                 ModelState.AddModelError(nameof(viewModel.StartDate),
                     "Start tijd moet vóór de eind tijd zijn.");
@@ -82,15 +123,32 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 return View(viewModel);
             }
 
+            if (viewModel.SaveLocation == true)
+            {
+                _locationService.Create(new Location
+                {
+                    Name= viewModel.Location,
+                    Address = new Address
+                    {
+                        Street = viewModel.Street,
+                        Number = viewModel.Number,
+                        UnitNumber = viewModel.Unit,
+                        PostalCode = viewModel.PostalCode,
+                        City = viewModel.City
+                    }
+                });
+            }
 
+            var startDate = viewModel.StartDate.ToDateTime(viewModel.StartTime);
+            var endDate = viewModel.StartDate.ToDateTime(viewModel.EndTime);
+            var location = await _locationService.Get(viewModel.SelectedLocationId);
             var activity = new Activity
             {
                 Name = viewModel.Name,
                 Description = viewModel.Description ?? "No description provided",
-                Location = viewModel.Location,
-                Address = address,
-                StartDate = viewModel.StartDate,
-                EndDate = viewModel.EndDate,
+                Location = location,
+                StartDate = startDate,
+                EndDate = endDate,
                 MinimumParticipants = viewModel.MinimumParticipants,
                 MaximumParticipants = viewModel.MaximumParticipants,
                 Price = viewModel.Price,
@@ -116,8 +174,9 @@ namespace LotsOfFun.Ui.Mvc.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            await _activityService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

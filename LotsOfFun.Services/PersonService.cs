@@ -103,7 +103,7 @@ namespace LotsOfFun.Services
              await _dbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<string> GetNewsletterSubscriberEmails()
+        public IList<string> GetNewsletterSubscriberEmails()
         {
             return _dbContext.People
                 .Where(p => p.NewsLetter)

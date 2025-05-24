@@ -176,6 +176,13 @@ namespace LotsOfFun.Ui.Mvc.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+           await _personService.Delete(id);
+           return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public IActionResult ExportNewsletterEmails()
         {

@@ -20,6 +20,8 @@ namespace LotsOfFun.Repository
 
         public DbSet<Activity> Activities => Set<Activity>();
         public DbSet<Person> People => Set<Person>();
+
+        public DbSet<Location> Locations => Set<Location>();
         public DbSet<ActivityRegistration> ActivityRegistrations => Set<ActivityRegistration>();
 
 
@@ -42,7 +44,7 @@ namespace LotsOfFun.Repository
                 a.Property(p => p.City).HasColumnName("City");
             });
 
-            modelBuilder.Entity<Activity>().OwnsOne(a => a.Address, a =>
+            modelBuilder.Entity<Location>().OwnsOne(a => a.Address, a =>
             {
                 a.Property(p => p.Street).HasColumnName("Street");
                 a.Property(p => p.Number).HasColumnName("Number");

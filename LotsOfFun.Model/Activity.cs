@@ -15,9 +15,6 @@ namespace LotsOfFun.Model
 
         public required string Name { get; set; }
         public required string Description { get; set; }
-        public required string Location { get; set; }
-        public  Address? Address { get; set; }
-
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
@@ -29,6 +26,10 @@ namespace LotsOfFun.Model
 
         public string? ImageUrl { get; set; }
 
+
+
+        public int LocationId { get; set; }
+        public  Location Location { get; set; }
 
         public List<ActivityRegistration> ActivityRegistrations { get; set; } = new();
     }

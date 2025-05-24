@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LotsOfFun.Model;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace LotsOfFun.Ui.Mvc.Models.Activity
 {
@@ -11,11 +13,18 @@ namespace LotsOfFun.Ui.Mvc.Models.Activity
         [Display(Name="Omschrijving")]
         [StringLength(1000, ErrorMessage = "Omschrijving mag maximaal 1000 karakters bevatten")]
         public  string? Description { get; set; }
+        
 
         [Display(Name = "Locatie")]
         [Required(ErrorMessage = "Locatie is verplicht")]
-        [StringLength(50, ErrorMessage = "Locatie mag maximaal 50 karakters bevatten")]
-        public required string Location { get; set; }
+        public int SelectedLocationId { get; set; }
+        public List<SelectListItem> Locations { get; set; }
+       public  string Location { get; set; }
+
+        public string LocationDataJson { get; set; }
+
+        [Display(Name="Locatie opslaan")]
+        public bool SaveLocation { get; set; }
 
 
         [Display(Name = "Straat")]
@@ -39,13 +48,17 @@ namespace LotsOfFun.Ui.Mvc.Models.Activity
         [StringLength(50, ErrorMessage = "Gemeente mag maximaal 50 karakters bevatten")]
         public string? City { get; set; }
 
-        [Display(Name="Start tijd")]
+        [Display(Name="Datum")]
+        [Required(ErrorMessage = "Datum is verplicht")]
+        public DateOnly StartDate { get; set; }
+
+        [Display(Name = "Start tijd")]
         [Required(ErrorMessage = "Start tijd is verplicht")]
-        public DateTime StartDate { get; set; }
+        public TimeOnly StartTime { get; set; }
 
         [Display(Name = "Eind tijd")]
         [Required(ErrorMessage = "Eind tijd is verplicht")]
-        public DateTime EndDate { get; set; }
+        public TimeOnly EndTime { get; set; }
 
         [Display(Name="Minimum aantal deelnemers")]
         [Required(ErrorMessage = "Minimum aantal deelnemers is verplicht")]

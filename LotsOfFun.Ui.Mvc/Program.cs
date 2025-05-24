@@ -17,6 +17,7 @@ builder.Services.AddDbContext<LotsOfFunDbContext>(options =>
 
 builder.Services.AddScoped<PersonService>();
 builder.Services.AddScoped<ActivityService>();
+builder.Services.AddScoped<LocationService>();
 
 
 

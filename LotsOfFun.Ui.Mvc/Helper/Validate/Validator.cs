@@ -32,11 +32,11 @@ namespace LotsOfFun.Ui.Mvc.Helper.Validate
             {
                 address = new Address
                 {
-                    Street = street!,
-                    Number = number!,
+                    Street = street,
+                    Number = number,
                     UnitNumber = unit,
-                    PostalCode = postalCode!,
-                    City = city!
+                    PostalCode = postalCode,
+                    City = city
                 };
                 return true;
             }
