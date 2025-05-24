@@ -1,5 +1,30 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model LotsOfFun.Ui.Mvc.Models.Activity.ActivityDetailsViewModel
+
+<div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+    <img src="@Model.ImageUrl" class="card-img-top object-fit-cover" alt="@Model.Name image" style="height: 250px; object-fit: cover;">
+    
+    <div class="card-body p-4">
+        <h4 class="fw-bold mb-2 text-primary">@Model.Name</h4>
+        <p class="text-muted mb-4">@Model.Description</p>
+
+        <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-clock me-2 text-warning"></i>
+                <span><strong>Tijd:</strong> @Model.StartTime - @Model.EndTime</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-geo-alt me-2 text-danger"></i>
+                <span><strong>Locatie:</strong> @Model.Location</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-map me-2 text-success"></i>
+                <span><strong>Adres:</strong> @Model.FullAddress</span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <span class="badge bg-success fs-6">@Model.Price &euro;</span>
+            <a href="#" class="btn btn-warning px-4 py-2">Inschrijven</a>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ using LotsOfFun.Ui.Mvc.Models.Activity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
+using AutoMapper;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
@@ -12,34 +13,52 @@ namespace LotsOfFun.Ui.Mvc.Controllers
     {
         private readonly ActivityService _activityService;
         private readonly LocationService _locationService;
+        private readonly IMapper _mapper;
 
 
-        public ActivitiesController(ActivityService activityService, LocationService locationService)
+        public ActivitiesController(ActivityService activityService, LocationService locationService,IMapper mapper)
         {
             _activityService = activityService;
             _locationService = locationService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            // Retrieve a list of ActivityDto objects from the ActivityService
             var activities = await _activityService.GetAll();
+
+
+            // Map the list of ActivityDto to a list of ActivityViewModel
+            // and wrap it in an ActivitiesViewModel (using automapper)
             var viewModel = new ActivitiesViewModel
             {
-                Activities = activities.Select(a => new ActivityViewModel
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    Location = a.Location
-                }).ToList(),
+                Activities = activities.Select(a => 
+                    
+                    _mapper.Map<ActivityViewModel>(a)).ToList(),
+                 
             };
+
+
+            // Pass the ActivitiesViewModel to the view for rendering
             return View(viewModel);
         }
 
         [HttpGet]
-        public IActionResult Details([FromRoute] int id)
+        public async Task<IActionResult> Details([FromRoute] int id)
         {
-            return View();
+            // Get a single ActivityDto from the ActivityService by its ID
+            var activityDto = await _activityService.Get(id);
+            if (activityDto == null)
+            {
+                return NotFound();
+            }
+            // Map the ActivityDto to an ActivityDetailsViewModel
+            var viewModel = _mapper.Map<ActivityDetailsViewModel>(activityDto);
+
+            // Return the view with the ActivityDetailsViewModel
+            return View(viewModel);
         }
 
 

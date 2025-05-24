@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using LotsOfFun.Dto.Activity;
 using LotsOfFun.Model;
 using LotsOfFun.Repository;
@@ -15,48 +11,44 @@ namespace LotsOfFun.Services
     {
 
         private readonly LotsOfFunDbContext _dbContext;
-        
+        private readonly IMapper _mapper;
 
-        public ActivityService(LotsOfFunDbContext dbContext)
+        public ActivityService(LotsOfFunDbContext dbContext,IMapper mapper)
         {
             _dbContext = dbContext;
-             
+            _mapper = mapper;
         }
 
 
         public async Task<IList<ActivityDto>> GetAll()
         {
+            // Retrieve all activities from the database, including their associated Location
             var activities = await _dbContext.Activities.Include(a => a.Location).ToListAsync();
 
-            return activities.Select(a => new ActivityDto
-            {
-                Id =a.Id,
-                Name = a.Name,
-                Description = a.Description,
-                Location = a.Location.Name,
-                FullAddress = StringFormatter.FormatAddress(a.Location.Address),
-                StartDate = a.StartDate,
-                EndDate = a.EndDate,
-                MinimumParticipants = a.MinimumParticipants,
-                MaximumParticipants = a.MaximumParticipants,
-                Price = a.Price,
-                ImageUrl = a.ImageUrl
-            }).ToList();
+
+            // Map the list of Activity domain models to a list of ActivityDto objects using AutoMapper
+            var mappedActivities = _mapper.Map<List<ActivityDto>>(activities);
+
+            // Return the list of ActivityDto objects to the controller
+            return mappedActivities;
         }
 
 
-        public async Task<ActivityDetailDto?> Get(int id)
+        public async Task<ActivityDto?> Get(int id)
         {
-            var activity = await _dbContext.Activities.FirstOrDefaultAsync(b => b.Id == id);
+            // Retrieve a single Activity from the database (including related Location)
+            var activity = await _dbContext.Activities
+                .Include(a => a.Location)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            // If not found, return null
             if (activity == null)
             {
                 return null;
             }
-                
 
-            return new ActivityDetailDto();
-
-
+            // Map the Activity to an ActivityDto and return it (to the controller)
+            return _mapper.Map<ActivityDto>(activity);
         }
 
 
