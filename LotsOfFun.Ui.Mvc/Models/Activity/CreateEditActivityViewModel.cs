@@ -16,12 +16,13 @@ namespace LotsOfFun.Ui.Mvc.Models.Activity
         
 
         [Display(Name = "Locatie")]
-        [Required(ErrorMessage = "Locatie is verplicht")]
-        public int SelectedLocationId { get; set; }
-        public List<SelectListItem> Locations { get; set; }
-       public  string Location { get; set; }
+        
+        public int? SelectedLocationId { get; set; }
+        public List<SelectListItem>? Locations { get; set; }
 
-        public string LocationDataJson { get; set; }
+       public  string? Location { get; set; }
+
+        public string? LocationDataJson { get; set; }
 
         [Display(Name="Locatie opslaan")]
         public bool SaveLocation { get; set; }

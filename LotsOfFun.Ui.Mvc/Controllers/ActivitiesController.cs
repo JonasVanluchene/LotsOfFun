@@ -115,7 +115,13 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                     out var address))
             {
                 ModelState.AddModelError("", "Vul alle verplichte adresvelden in of laat ze volledig leeg.");
-                
+                return View(viewModel);
+            }
+
+            if (string.IsNullOrWhiteSpace(viewModel.Location) && viewModel.SelectedLocationId == 0)
+            {
+                ModelState.AddModelError("", "Kies een bestaande of nieuwe locatie");
+                return View(viewModel);
             }
 
             if (!ModelState.IsValid)
@@ -123,9 +129,11 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.SaveLocation == true)
+
+            Location newLocation = null;
+            if (viewModel.SaveLocation)
             {
-                _locationService.Create(new Location
+              newLocation = await _locationService.Create(new Location
                 {
                     Name= viewModel.Location,
                     Address = new Address
@@ -141,12 +149,12 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
             var startDate = viewModel.StartDate.ToDateTime(viewModel.StartTime);
             var endDate = viewModel.StartDate.ToDateTime(viewModel.EndTime);
-            var location = await _locationService.Get(viewModel.SelectedLocationId);
+            var locationId = viewModel.SelectedLocationId.HasValue ? viewModel.SelectedLocationId : newLocation.Id;
             var activity = new Activity
             {
                 Name = viewModel.Name,
                 Description = viewModel.Description ?? "No description provided",
-                Location = location,
+                LocationId = locationId,
                 StartDate = startDate,
                 EndDate = endDate,
                 MinimumParticipants = viewModel.MinimumParticipants,

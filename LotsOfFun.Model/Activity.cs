@@ -28,7 +28,7 @@ namespace LotsOfFun.Model
 
 
 
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         public  Location Location { get; set; }
 
         public List<ActivityRegistration> ActivityRegistrations { get; set; } = new();

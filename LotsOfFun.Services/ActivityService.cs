@@ -26,7 +26,7 @@ namespace LotsOfFun.Services
 
         public async Task<IList<ActivityDto>> GetAll()
         {
-            var activities = await _dbContext.Activities.ToListAsync();
+            var activities = await _dbContext.Activities.Include(a => a.Location).ToListAsync();
 
             return activities.Select(a => new ActivityDto
             {
