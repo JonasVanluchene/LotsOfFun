@@ -6,9 +6,11 @@ using LotsOfFun.Ui.Mvc.Models;
 using LotsOfFun.Ui.Mvc.Models.People;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
+    [Authorize]
     public class PeopleController : Controller
     {
         private readonly PersonService _personService;

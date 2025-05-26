@@ -1,9 +1,11 @@
 ﻿using LotsOfFun.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace LotsOfFun.Repository
 {
-    public class LotsOfFunDbContext : DbContext
+    public class LotsOfFunDbContext : IdentityDbContext<Person>
     {
         public LotsOfFunDbContext(DbContextOptions<LotsOfFunDbContext> options) : base(options)
         {
@@ -26,7 +28,7 @@ namespace LotsOfFun.Repository
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Person>().OwnsOne(p => p.Address, a =>
             {
                 a.Property(p => p.Street).HasColumnName("Street");

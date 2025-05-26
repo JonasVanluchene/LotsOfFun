@@ -3,11 +3,31 @@ using LotsOfFun.Repository;
 using LotsOfFun.Services;
 using LotsOfFun.Services.Helper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+    {
+        //options.SignIn.RequireConfirmedAccount = true;
+
+    })
+    .AddEntityFrameworkStores<LotsOfFunDbContext>();
+
+
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.LoginPath = "/Identity/SignIn";
+    options.AccessDeniedPath = "/Identity/SignIn";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.SlidingExpiration = true;
+});
+
 
 var connectionString = builder.Configuration.GetConnectionString(nameof(LotsOfFunDbContext));
 builder.Services.AddDbContext<LotsOfFunDbContext>(options =>
@@ -39,6 +59,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

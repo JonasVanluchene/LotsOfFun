@@ -12,7 +12,7 @@ namespace LotsOfFun.Model
     {
         public int Id { get; set; }
 
-        public int PersonId { get; set; }
+        public string PersonId { get; set; }
         public required Person Person { get; set; }
 
         public int ActivityId { get; set; }

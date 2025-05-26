@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
+    [Authorize]
     public class ActivitiesController : Controller
     {
         private readonly ActivityService _activityService;
@@ -24,6 +26,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             // Retrieve a list of ActivityDto objects from the ActivityService

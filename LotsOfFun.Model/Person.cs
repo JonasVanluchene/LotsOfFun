@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace LotsOfFun.Model
 {
     [Table(nameof(Person))]
-    public class Person
+    public class Person : IdentityUser
     {
         public int Id { get; set; }
 
