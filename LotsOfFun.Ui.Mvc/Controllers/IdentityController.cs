@@ -1,4 +1,5 @@
-﻿using LotsOfFun.Ui.Mvc.Models.Identity;
+﻿using LotsOfFun.Model;
+using LotsOfFun.Ui.Mvc.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +7,10 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 {
     public class IdentityController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<Person> _signInManager;
+        private readonly UserManager<Person> _userManager;
 
-        public IdentityController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public IdentityController(SignInManager<Person> signInManager, UserManager<Person> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -80,12 +81,15 @@ namespace LotsOfFun.Ui.Mvc.Controllers
             }
             ViewBag.ReturnUrl = returnUrl;
 
-            var identityUser = new IdentityUser(registerModel.Email)
+            var newUser = new Person()
             {
-                Email = registerModel.Email
+                FirstName = registerModel.FirstName,
+                LastName = registerModel.LastName,
+                UserName = registerModel.Email,
+
             };
 
-            var result = await _userManager.CreateAsync(identityUser, registerModel.Password);
+            var result = await _userManager.CreateAsync(newUser, registerModel.Password);
 
             if (!result.Succeeded)
             {
@@ -99,7 +103,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
                 return View();
             }
 
-            await _signInManager.SignInAsync(identityUser, false);
+            await _signInManager.SignInAsync(newUser, false);
 
             return LocalRedirect(returnUrl);
 

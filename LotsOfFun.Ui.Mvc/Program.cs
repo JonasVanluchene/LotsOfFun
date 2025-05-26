@@ -1,4 +1,5 @@
 
+using LotsOfFun.Model;
 using LotsOfFun.Repository;
 using LotsOfFun.Services;
 using LotsOfFun.Services.Helper;
@@ -10,12 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<Person>(options =>
     {
         //options.SignIn.RequireConfirmedAccount = true;
 
     })
-    .AddEntityFrameworkStores<LotsOfFunDbContext>();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<LotsOfFunDbContext>()
+    ;
 
 
 
@@ -55,8 +58,27 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
 
-app.UseHttpsRedirection();
+    using (var scope = app.Services.CreateScope())
+    {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        string[] roleNames = { "Admin", "User" }; // Add roles as needed
+
+        foreach (var roleName in roleNames)
+        {
+            var roleExists = await roleManager.RoleExistsAsync(roleName);
+            if (!roleExists)
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+        }
+    }
+}
+
+    app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
