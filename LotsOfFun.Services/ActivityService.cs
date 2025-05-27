@@ -52,14 +52,15 @@ namespace LotsOfFun.Services
         }
 
 
-        public async Task<Activity?> Create(Activity activity)
+        public async Task<ActivityCreateDto?> Create(ActivityCreateDto activityCreateDto)
         {
+            var activity = _mapper.Map<Activity>(activityCreateDto);
             await _dbContext.Activities.AddAsync(activity);
             await _dbContext.SaveChangesAsync();
-            return activity;
+            return activityCreateDto;
         }
 
-        public async Task<Activity?> Update(int id, Activity activity)
+        public async Task<ActivityDto?> Update(int id, ActivityUpdateDto activityUpdateDto)
         {
             var dbActivity = await _dbContext.Activities.FirstOrDefaultAsync(a => a.Id == id);
             if (dbActivity is null)
@@ -67,22 +68,15 @@ namespace LotsOfFun.Services
                 return null;
             }
 
-            dbActivity.Name = activity.Name;
-            dbActivity.Description = activity.Description;
-            dbActivity.Location = activity.Location;
+            // ✅ Map fields from DTO to the tracked entity
+            _mapper.Map(activityUpdateDto, dbActivity);
 
-            dbActivity.StartDate = activity.StartDate;
-            dbActivity.EndDate = activity.EndDate;
-
-            dbActivity.MinimumParticipants = activity.MinimumParticipants;
-            dbActivity.MaximumParticipants = activity.MaximumParticipants;
-
-            dbActivity.Price = activity.Price;
-
-            dbActivity.ImageUrl = activity.ImageUrl;
+            dbActivity.UpdatedAt = DateTime.Now;
 
             await _dbContext.SaveChangesAsync();
-            return dbActivity;
+
+            // ✅ Map the updated entity back to a DTO if needed
+            return _mapper.Map<ActivityDto>(dbActivity);
         }
 
         public async Task Delete(int id)

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.Json;
 using AutoMapper;
+using LotsOfFun.Dto.Activity;
 
 namespace LotsOfFun.Ui.Mvc.Controllers
 {
@@ -150,7 +151,7 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
 
             Location newLocation = null;
-            if (viewModel.SaveLocation)
+            if (viewModel.SelectedLocationId == 0 || viewModel.SelectedLocationId is null)
             {
               newLocation = await _locationService.Create(new Location
                 {
@@ -168,28 +169,65 @@ namespace LotsOfFun.Ui.Mvc.Controllers
 
             var startDate = viewModel.StartDate.ToDateTime(viewModel.StartTime);
             var endDate = viewModel.StartDate.ToDateTime(viewModel.EndTime);
-            var locationId = viewModel.SelectedLocationId.HasValue ? viewModel.SelectedLocationId : newLocation.Id;
-            var activity = new Activity
-            {
-                Name = viewModel.Name,
-                Description = viewModel.Description ?? "No description provided",
-                LocationId = locationId,
-                StartDate = startDate,
-                EndDate = endDate,
-                MinimumParticipants = viewModel.MinimumParticipants,
-                MaximumParticipants = viewModel.MaximumParticipants,
-                Price = viewModel.Price,
-                CreatedAt = DateTime.Now
-            };
-            await _activityService.Create(activity);
+            viewModel.SelectedLocationId = viewModel.SelectedLocationId is not null
+                ? viewModel.SelectedLocationId
+                : newLocation?.Id ?? throw new InvalidOperationException("Locatie kon niet worden opgeslagen.");
+
+            var activityCreateDto = _mapper.Map<ActivityCreateDto>(viewModel);
+            
+            //var activity = new Activity
+            //{
+            //    Name = viewModel.Name,
+            //    Description = viewModel.Description ?? "No description provided",
+            //    LocationId = locationId,
+            //    StartDate = startDate,
+            //    EndDate = endDate,
+            //    MinimumParticipants = viewModel.MinimumParticipants,
+            //    MaximumParticipants = viewModel.MaximumParticipants,
+            //    Price = viewModel.Price,
+            //    CreatedAt = DateTime.Now
+            //};
+            await _activityService.Create(activityCreateDto);
             return RedirectToAction(nameof(Index));
         }
 
 
         [HttpGet]
-        public IActionResult Edit([FromRoute] int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
-            return View();
+            var activity = await _activityService.Get(id);
+            if (activity is null)
+            {
+                return NotFound();
+            }
+
+            var locations = await _locationService.GetAll();
+
+            var locationDataJson = JsonSerializer.Serialize(locations.Select(l => new {
+                id = l.Id,
+                street = l.Address.Street,
+                number = l.Address.Number,
+                unit = l.Address.UnitNumber,
+                postalCode = l.Address.PostalCode,
+                city = l.Address.City
+            }));
+            
+
+            var mappedViewModel = _mapper.Map<CreateEditActivityViewModel>(activity);
+            mappedViewModel.Locations = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = "", Text = "-- Select a location --" }
+                }
+                .Concat(locations.Select(l => new SelectListItem
+                {
+                    Value = l.Id.ToString(),
+                    Text = l.Name
+                }))
+                .ToList();
+
+            mappedViewModel.LocationDataJson = locationDataJson;
+            mappedViewModel.IsEdit = true;
+            return View(mappedViewModel);
         }
 
 

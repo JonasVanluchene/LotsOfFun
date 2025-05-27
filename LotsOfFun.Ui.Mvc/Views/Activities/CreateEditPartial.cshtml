@@ -33,8 +33,17 @@
             <button type="button" class="btn btn-sm btn-outline-primary" id="addLocationButton">Locatie toevoegen</button>
         </div>
         <div id="knownLocation">
-            <select class="form-control" id="locationSelect" asp-for="SelectedLocationId"
-                    asp-items="Model.Locations" data-locations="@Model.LocationDataJson">
+            <select id="locationSelect"
+                    asp-for="SelectedLocationId"
+                    class="form-select"
+                    data-locations='@Html.Raw(Model.LocationDataJson)'
+                    data-is-edit="@Model.IsEdit.ToString().ToLower()">
+                @foreach (var location in Model.Locations)
+                {
+                    <option value="@location.Value" selected="@(location.Value == Model.SelectedLocationId.ToString())">
+                        @location.Text
+                    </option>
+                }
             </select>
             <span asp-validation-for="SelectedLocationId" class="text-danger"></span>
         </div>
@@ -79,13 +88,7 @@
         </div>
     </div>
 
-    <!-- Save location checkbox -->
-    <div class="form-check invisible" id="saveLocationForm-Check">
-        <input class="form-check-input" asp-for="SaveLocation" id="saveLocationCheckbox">
-        <label class="form-check-label" asp-for="SaveLocation">
-           
-        </label>
-    </div>
+    
 </fieldset>
 <fieldset>
     <legend class="w-auto px-2">Tijdstip</legend>

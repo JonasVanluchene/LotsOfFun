@@ -28,6 +28,9 @@ namespace LotsOfFun.Services.Mapping
             CreateMap<Person, PersonDetailDto>()
                 .ForMember(dest => dest.FullAddress, opt => opt.MapFrom(src => StringFormatter.FormatAddress(src.Address)));
 
+
+
+
             // Map from Activity entity to ActivityDto
             // - Location is simplified to Location.Name
             // - FullAddress is formatted using a helper method
@@ -44,6 +47,10 @@ namespace LotsOfFun.Services.Mapping
                 .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location.Name))
                 .ForMember(dest => dest.FullAddress, opt => opt.MapFrom(src => StringFormatter.FormatAddress(src.Location.Address)));
             */
+
+
+            CreateMap<ActivityCreateDto, Activity>();
+            CreateMap<ActivityUpdateDto, Activity>();
         }
     }
 }

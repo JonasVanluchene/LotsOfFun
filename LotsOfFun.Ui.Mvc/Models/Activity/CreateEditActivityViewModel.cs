@@ -78,30 +78,30 @@ namespace LotsOfFun.Ui.Mvc.Models.Activity
 
         public string? ImageUrl { get; set; }
 
-
+        public bool IsEdit { get; set; } = false;
 
 
         //CUSTOM MODELSTATE VALIDATION WITH IVALIDATABLEOBJECT INTERFACE
-        
+
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         //{
-            
+
         //        if (MaximumParticipants < MinimumParticipants)
         //        {
         //            yield return new ValidationResult(
         //                "Maximum aantal deelnemers moet groter of gelijk zijn aan minimum aantal deelnemers.",
         //                new[] { nameof(MaximumParticipants), nameof(MinimumParticipants) });
         //        }
-            
 
-            
+
+
         //        if (StartDate >= EndDate)
         //        {
         //            yield return new ValidationResult(
         //                "Start tijd moet vóór de eind tijd zijn.",
         //                new[] { nameof(StartDate), nameof(EndDate) });
         //        }
-            
+
         //}
     }
 }
